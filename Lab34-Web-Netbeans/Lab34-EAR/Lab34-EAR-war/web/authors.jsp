@@ -17,12 +17,16 @@
         
         <form name="findForm" action="Authors">
             Find Author with name:
+            <input type="text" name="find" value="" hidden="true" />
             <input type="text" name="name" value=""/>
             <input type="submit" value="Find" name="SubmitButton" />
         </form>
         
         <table border="1">
             <tr>
+                <td>
+                    Id
+                </td>
                 <td>
                     Name
                 </td>
@@ -42,6 +46,9 @@
         <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <c:forEach var="author" items="${authors}">
             <tr>
+                <td>
+                    ${author.id}
+                </td>
                 <td>
                     ${author.name}
                 </td>

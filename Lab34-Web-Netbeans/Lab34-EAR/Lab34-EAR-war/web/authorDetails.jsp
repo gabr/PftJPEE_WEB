@@ -14,9 +14,10 @@
     </head>
     <body>
         <jsp:useBean id="author" scope="request" type="pl.polsl.gabrys.arkadiusz.model.Author" />
-        <jsp:getProperty name="author" property="name" /></br>
-        <jsp:getProperty name="author" property="lastName" /></br>
-        
+        Id: <jsp:getProperty name="author" property="id" /></br>
+        Name: <jsp:getProperty name="author" property="name" /></br>
+        Last name: <jsp:getProperty name="author" property="lastName" /></br>
+
         </br>
         Books:
         <table border="1">

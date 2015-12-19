@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.polsl.gabrys.arkadiusz.servlets;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -18,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import pl.polsl.gabrys.arkadiusz.DatabaseManagerLocal;
 import pl.polsl.gabrys.arkadiusz.model.Author;
+import pl.polsl.gabrys.arkadiusz.model.Book;
 
 /**
  * Servlet for managing all Authors actions
@@ -57,6 +54,9 @@ public class Authors extends HttpServlet {
         switch (action) {
             case "add":
                 addAuthor(request, response);
+                return;
+            case "find":
+                findAuthor(request, response);
                 return;
             case "details":
                 showDetails(request, response);
@@ -126,6 +126,28 @@ public class Authors extends HttpServlet {
         
         request.setAttribute("authors", authors);
         request.getRequestDispatcher("/authors.jsp").include(request, response);
+    }
+    
+    /**
+     * Finds Author or shows books list
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs 
+     */
+    private void findAuthor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        Map<String, String[]> params = request.getParameterMap();
+        
+        List<Author> authors = db.findAuthorsByName(params.get("name")[0]);
+        
+        if (authors.isEmpty()) {
+            showList(request, response);
+        } else {
+            request.setAttribute("author", authors.get(0));
+            request.getRequestDispatcher("/authorDetails.jsp").include(request, response);
+        }
     }
     
     /**
