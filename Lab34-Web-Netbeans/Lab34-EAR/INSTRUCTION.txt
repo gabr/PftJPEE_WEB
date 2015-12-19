@@ -1,0 +1,16 @@
+1. 	There are three projects altogether:
+	a)	Lab34-EAR - the container project for ejb and web modules. Contains sun-resources.xml file 
+		configuring the JDBC connection pool and JDBC data source. There is NO need to create them manually
+		using Glassfish administration console. Please make sure there is neither jdbc/db JDBC resource 
+		nor db_pool JDBC Connection Pool created manually on the server.
+	b)	Lab34-EAR-ejb - EJB module, here you put your session beans (stateless, with LOCAL user interface)
+		and your entity classes. There is NO need to specify entity classes manually in persistence.xml.
+	c)	Lab34-EAR-web - web client module, here you put your servlets, JSP pages and tag handler(s). Do NOT run this
+		project explicitly. It already includes web.xml and lib.tld files in the WEB-INF folder so there is NO
+		need for creating them once again (although at some point you will have to edit them). The welcome page 
+		is assumed to be index.jsp, but you have to create it on your own.
+
+2.  The project assumes that db database with db_user, db_pass credentials is available, as in the previous project.
+
+3.  Follow the package naming convention proposed in the previous report, which means you should include your 
+	last name and first name in the package name.
