@@ -1,0 +1,2 @@
+serviceClass: com.example.myapp.client.dotProduct
+path: 4E760CB8EE9C6A69261425B98E33C573.gwt.rpc

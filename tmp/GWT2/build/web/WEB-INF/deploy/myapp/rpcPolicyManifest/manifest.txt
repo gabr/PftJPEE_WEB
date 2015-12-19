@@ -1,0 +1,4 @@
+# Module myapp
+# RPC service class, partial path of RPC policy file
+com.example.myapp.client.dotProduct, 4E760CB8EE9C6A69261425B98E33C573.gwt.rpc
+com.example.myapp.client.GreetingService, A2C65318FA233BB5CBF4F1A3600EAE11.gwt.rpc

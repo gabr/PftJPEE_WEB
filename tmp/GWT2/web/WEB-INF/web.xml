@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <!-- Servlets -->
+    <servlet>
+        <servlet-name>greetServlet</servlet-name>
+        <servlet-class>com.example.myapp.server.GreetingServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GWTService</servlet-name>
+        <servlet-class>com.example.myapp.server.GWTServiceImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>dotProduct</servlet-name>
+        <servlet-class>com.example.myapp.server.dotProductImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>greetServlet</servlet-name>
+        <url-pattern>/myapp/greet</url-pattern>
+    </servlet-mapping>
+    <!-- Default page to serve -->
+    <servlet-mapping>
+        <servlet-name>GWTService</servlet-name>
+        <url-pattern>/myapp/gwtservice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>dotProduct</servlet-name>
+        <url-pattern>/myapp/dotproduct</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>MyApp.html</welcome-file>
+    </welcome-file-list>
+</web-app>
