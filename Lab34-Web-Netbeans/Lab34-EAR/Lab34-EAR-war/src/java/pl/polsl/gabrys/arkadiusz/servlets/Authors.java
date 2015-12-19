@@ -56,6 +56,9 @@ public class Authors extends HttpServlet {
         
         // perform action
         switch (action) {
+            case "add":
+                addAuthor(request, response);
+                return;
             case "details":
                 showDetails(request, response);
                 return;
@@ -117,6 +120,23 @@ public class Authors extends HttpServlet {
         
         request.setAttribute("authors", authors);
         request.getRequestDispatcher("/authors.jsp").include(request, response);
+    }
+    
+    private void addAuthor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        ArrayList<String> requiredParameters = new ArrayList<String>();
+        requiredParameters.add("name");
+        requiredParameters.add("lastName");
+        
+        Map<String, String[]> params = request.getParameterMap();
+        
+        if (params.keySet().containsAll(requiredParameters)) {
+            db.persistAuthor(params.get("name")[0], params.get("lastName")[0]);
+            showList(request, response);
+        } else {
+            request.getRequestDispatcher("/authorAdd.jsp").include(request, response);
+        }
     }
 
     private void showDetails(HttpServletRequest request, HttpServletResponse response)

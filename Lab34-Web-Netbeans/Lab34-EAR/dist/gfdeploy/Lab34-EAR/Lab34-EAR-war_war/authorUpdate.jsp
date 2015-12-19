@@ -16,8 +16,8 @@
         <jsp:useBean id="author" scope="request" type="pl.polsl.gabrys.arkadiusz.model.Author" />        
         <form name="update" action="Authors">
             <input type="text" name="update" hidden="true" value="<jsp:getProperty name="author" property="id" />" /> </br>
-            <input type="text" name="name" value="<jsp:getProperty name="author" property="name" />" /> </br>
-            <input type="text" name="lastName" value="<jsp:getProperty name="author" property="lastName" />" /> </br>
+            Name: <input type="text" name="name" value="<jsp:getProperty name="author" property="name" />" /> </br>
+            LastName: <input type="text" name="lastName" value="<jsp:getProperty name="author" property="lastName" />" /> </br>
             <input type="submit" value="Save" name="SubmitButton" />
         </form>
     </body>
