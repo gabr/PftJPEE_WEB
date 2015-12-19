@@ -61,6 +61,7 @@ public class Authors extends HttpServlet {
             case "update":
                 return;
             case "delete":
+                deleteAuthor(request, response);
                 return;
             default:
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Wrong action name for Authors");
@@ -121,7 +122,7 @@ public class Authors extends HttpServlet {
         
         String[] values = request.getParameterValues("details");
         
-        if (values.length < 1) {
+        if (values.length < 1 || values[0].trim().equals("")) {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Details id not specified");
                 return;
         }
@@ -136,5 +137,21 @@ public class Authors extends HttpServlet {
         request.setAttribute("author", author);
         request.setAttribute("books", author.getBooks());
         request.getRequestDispatcher("/authorDetails.jsp").include(request, response);
+    }
+    
+    private void deleteAuthor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        String[] values = request.getParameterValues("delete");
+        
+        if (values.length < 1 || values[0].trim().equals("")) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Delete id not specified");
+                return;
+        }
+        
+        Long id = Long.parseLong(values[0]);
+        db.removeAuthor(id);
+        
+        showList(request, response);
     }
 }
