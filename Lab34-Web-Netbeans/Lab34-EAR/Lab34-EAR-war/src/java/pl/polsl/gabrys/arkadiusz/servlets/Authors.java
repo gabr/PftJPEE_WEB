@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -59,6 +60,7 @@ public class Authors extends HttpServlet {
                 showDetails(request, response);
                 return;
             case "update":
+                updateAuthor(request, response);
                 return;
             case "delete":
                 deleteAuthor(request, response);
@@ -153,5 +155,38 @@ public class Authors extends HttpServlet {
         db.removeAuthor(id);
         
         showList(request, response);
+    }
+    
+    private void updateAuthor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        ArrayList<String> requiredParameters = new ArrayList<String>();
+        requiredParameters.add("name");
+        requiredParameters.add("lastName");
+        
+        Map<String, String[]> params = request.getParameterMap();
+        
+        String[] values = params.get("update");
+        
+        if (values.length < 1 || values[0].trim().equals("")) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Update id not specified");
+                return;
+        }
+        
+        Long id = Long.parseLong(values[0]);
+        Author author = db.findAuthorById(id);
+        
+        if (author == null) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Author with given id found");
+            return;
+        }        
+        
+        if (params.keySet().containsAll(requiredParameters)) {
+            db.mergeAuthor(id, params.get("name")[0], params.get("lastName")[0]);
+            showList(request, response);
+        } else {
+            request.setAttribute("author", author);
+            request.getRequestDispatcher("/authorUpdate.jsp").include(request, response);
+        }
     }
 }

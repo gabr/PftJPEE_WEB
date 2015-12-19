@@ -17,7 +17,7 @@
         
         <form name="findForm" action="Authors">
             Find Author with name:
-            <input type="text" name="name" value="" size="80" />
+            <input type="text" name="name" value=""/>
             <input type="submit" value="Find" name="SubmitButton" />
         </form>
         
