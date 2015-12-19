@@ -18,14 +18,13 @@ import pl.polsl.gabrys.arkadiusz.model.*;
  *
  * @author arkad_000
  */
-@Stateless
+@Stateless(mappedName = "DatabaseManager")
 public class DatabaseManager implements DatabaseManagerLocal {
 
-    
     /**
      * Entity manager instance
      */
-    @PersistenceContext(name="Lab2-EJB")
+    @PersistenceContext(name="Lab34-EJB")
     private EntityManager entityManager;
 
     /**
