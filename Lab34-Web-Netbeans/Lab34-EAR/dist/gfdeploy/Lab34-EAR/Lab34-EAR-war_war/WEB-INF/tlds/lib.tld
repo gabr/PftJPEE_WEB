@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<taglib version="2.1" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd">
-    <tlib-version>1.0</tlib-version>
-    <!-- Specify the prefix for the library -->
-    <short-name>lab</short-name>
-    <!-- Specify the uri for the library -->
-    <uri>http://pl.polsl.lab34/taglib</uri>
-    <!-- Specify the tag handlers in the library -->
-</taglib>

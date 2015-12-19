@@ -5,9 +5,7 @@
  */
 package pl.polsl.gabrys.arkadiusz.servlets;
 
-import com.sun.xml.rpc.processor.modeler.j2ee.xml.string;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -22,8 +20,9 @@ import pl.polsl.gabrys.arkadiusz.DatabaseManagerLocal;
 import pl.polsl.gabrys.arkadiusz.model.Author;
 
 /**
- *
+ * Servlet for managing all Authors actions
  * @author arkad_000
+ * @version 1.0
  */
 @WebServlet(name = "Authors", urlPatterns = {"/Authors"})
 public class Authors extends HttpServlet {
@@ -113,6 +112,13 @@ public class Authors extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    /**
+     * Shows list view with all Authors
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void showList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -122,6 +128,13 @@ public class Authors extends HttpServlet {
         request.getRequestDispatcher("/authors.jsp").include(request, response);
     }
     
+    /**
+     * Adds new Author or shows add Author form
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs 
+     */
     private void addAuthor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -139,6 +152,13 @@ public class Authors extends HttpServlet {
         }
     }
 
+    /**
+     * Shows details for Author listing all Books
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void showDetails(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -161,6 +181,13 @@ public class Authors extends HttpServlet {
         request.getRequestDispatcher("/authorDetails.jsp").include(request, response);
     }
     
+    /**
+     * Deletes Author
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void deleteAuthor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -177,6 +204,13 @@ public class Authors extends HttpServlet {
         showList(request, response);
     }
     
+    /**
+     * Updates Atuhor or shows update Author form
+     * @param request the request object
+     * @param response thre response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     private void updateAuthor(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
