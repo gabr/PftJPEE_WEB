@@ -15,8 +15,9 @@ import javax.persistence.TransactionRequiredException;
 import pl.polsl.gabrys.arkadiusz.model.*;
 
 /**
- *
+ * Database Manager class
  * @author arkad_000
+ * @version 1.0
  */
 @Stateless(mappedName = "DatabaseManager")
 public class DatabaseManager implements DatabaseManagerLocal {
