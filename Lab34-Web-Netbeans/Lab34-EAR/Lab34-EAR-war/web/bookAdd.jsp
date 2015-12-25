@@ -17,7 +17,7 @@
             <input type="text" name="add" hidden="true" value="" /> </br>
             Title: <input type="text" name="title" value="" /> </br>
             Pages: <input type="text" name="pages" value="" /> </br>
-            Release date: <input type="text" name="releaseDate" value="" /> </br>
+            Release date (yyyy.dd.mm): <input type="text" name="releaseDate" value="" /> </br>
             Author id: <input type="text" name="authorId" value="" /> </br>
             <input type="submit" value="Save" name="SubmitButton" />
         </form>

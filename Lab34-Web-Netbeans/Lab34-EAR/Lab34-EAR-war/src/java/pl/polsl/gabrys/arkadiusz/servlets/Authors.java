@@ -7,11 +7,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
 import pl.polsl.gabrys.arkadiusz.DatabaseManagerLocal;
 import pl.polsl.gabrys.arkadiusz.model.Author;
 import pl.polsl.gabrys.arkadiusz.model.Book;
@@ -68,7 +70,7 @@ public class Authors extends HttpServlet {
                 deleteAuthor(request, response);
                 return;
             default:
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Wrong action name for Authors");
+                sendError(request, response, "Wrong action name for Authors");
                 return;
         }
     }
@@ -115,7 +117,7 @@ public class Authors extends HttpServlet {
     /**
      * Shows list view with all Authors
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
@@ -131,7 +133,7 @@ public class Authors extends HttpServlet {
     /**
      * Finds Author or shows books list
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs 
      */
@@ -153,7 +155,7 @@ public class Authors extends HttpServlet {
     /**
      * Adds new Author or shows add Author form
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs 
      */
@@ -167,7 +169,20 @@ public class Authors extends HttpServlet {
         Map<String, String[]> params = request.getParameterMap();
         
         if (params.keySet().containsAll(requiredParameters)) {
-            db.persistAuthor(params.get("name")[0], params.get("lastName")[0]);
+            String name = params.get("name")[0];
+            String lastName = params.get("lastName")[0];
+            
+            if (name.trim().isEmpty()) {
+                sendError(request, response, "Author name cannot be empty");
+                return;
+            }
+            
+            if (lastName.trim().isEmpty()) {
+                sendError(request, response, "Author last name cannot be empty");
+                return;
+            }
+            
+            db.persistAuthor(name, lastName);
             showList(request, response);
         } else {
             request.getRequestDispatcher("/authorAdd.jsp").include(request, response);
@@ -177,7 +192,7 @@ public class Authors extends HttpServlet {
     /**
      * Shows details for Author listing all Books
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
@@ -187,7 +202,7 @@ public class Authors extends HttpServlet {
         String[] values = request.getParameterValues("details");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Details id not specified");
+                sendError(request, response, "Details id not specified");
                 return;
         }
         
@@ -195,7 +210,7 @@ public class Authors extends HttpServlet {
         Author author = db.findAuthorById(id);
         
         if (author == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Author with given id found");
+            sendError(request, response, "No Author with given id found");
             return;
         }        
         request.setAttribute("author", author);
@@ -206,7 +221,7 @@ public class Authors extends HttpServlet {
     /**
      * Deletes Author
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
@@ -216,7 +231,7 @@ public class Authors extends HttpServlet {
         String[] values = request.getParameterValues("delete");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Delete id not specified");
+                sendError(request, response, "Delete id not specified");
                 return;
         }
         
@@ -229,7 +244,7 @@ public class Authors extends HttpServlet {
     /**
      * Updates Atuhor or shows update Author form
      * @param request the request object
-     * @param response thre response object
+     * @param response the response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
@@ -245,7 +260,7 @@ public class Authors extends HttpServlet {
         String[] values = params.get("update");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Update id not specified");
+                sendError(request, response, "Update id not specified");
                 return;
         }
         
@@ -253,16 +268,46 @@ public class Authors extends HttpServlet {
         Author author = db.findAuthorById(id);
         
         if (author == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Author with given id found");
+            sendError(request, response, "No Author with given id found");
             return;
         }        
         
         if (params.keySet().containsAll(requiredParameters)) {
-            db.mergeAuthor(id, params.get("name")[0], params.get("lastName")[0]);
+            String name = params.get("name")[0];
+            String lastName = params.get("lastName")[0];
+            
+            if (name.trim().isEmpty()) {
+                sendError(request, response, "Author name cannot be empty");
+                return;
+            }
+            
+            if (lastName.trim().isEmpty()) {
+                sendError(request, response, "Author last name cannot be empty");
+                return;
+            }
+            
+            db.mergeAuthor(id, name, lastName);
             showList(request, response);
         } else {
             request.setAttribute("author", author);
             request.getRequestDispatcher("/authorUpdate.jsp").include(request, response);
         }
+    }
+    
+    /**
+     * Shows error page
+     * @param request the request object
+     * @param response I/nse the response object
+     * @param message the error message
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if aO error occurs
+     */
+    private void sendError(HttpServletRequest request, HttpServletResponse response, String message)
+            throws ServletException, IOException {
+        
+        JspException e = new JspException(message);
+        request.setAttribute("error", e);
+        RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+        rd.forward(request, response);
     }
 }

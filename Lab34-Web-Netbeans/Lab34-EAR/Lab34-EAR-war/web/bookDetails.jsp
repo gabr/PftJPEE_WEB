@@ -13,6 +13,7 @@
         <title>Book details</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <jsp:useBean id="book" scope="request" type="pl.polsl.gabrys.arkadiusz.model.Book" />
         Id: <jsp:getProperty name="book" property="id" /></br>
         Title: <jsp:getProperty name="book" property="title" /></br>

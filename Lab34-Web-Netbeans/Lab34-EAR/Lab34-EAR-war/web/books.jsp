@@ -13,6 +13,7 @@
         <title>Books</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <a href="./Books?add">Add new</a> <br />
 
         <form name="findForm" action="Books">

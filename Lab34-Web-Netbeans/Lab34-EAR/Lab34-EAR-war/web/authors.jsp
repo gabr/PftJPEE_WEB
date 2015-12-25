@@ -13,6 +13,7 @@
         <title>Authors</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <a href="./Authors?add">Add new</a> <br />
         
         <form name="findForm" action="Authors">

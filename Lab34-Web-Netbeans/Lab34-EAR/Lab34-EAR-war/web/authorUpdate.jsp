@@ -13,6 +13,7 @@
         <title>Author update</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <jsp:useBean id="author" scope="request" type="pl.polsl.gabrys.arkadiusz.model.Author" />        
         <form name="update" action="Authors">
             <input type="text" name="update" hidden="true" value="<jsp:getProperty name="author" property="id" />" /> </br>

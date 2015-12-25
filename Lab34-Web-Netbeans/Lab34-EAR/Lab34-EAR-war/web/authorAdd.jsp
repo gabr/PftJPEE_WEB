@@ -13,6 +13,7 @@
         <title>Author add</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <form name="update" action="Authors">
             <input type="text" name="add" hidden="true" value="" /> </br>
             Name: <input type="text" name="name" value="" /> </br>

@@ -13,6 +13,7 @@
         <title>Author details</title>
     </head>
     <body>
+        <a href="./">Menu</a> <br />
         <jsp:useBean id="author" scope="request" type="pl.polsl.gabrys.arkadiusz.model.Author" />
         Id: <jsp:getProperty name="author" property="id" /></br>
         Name: <jsp:getProperty name="author" property="name" /></br>

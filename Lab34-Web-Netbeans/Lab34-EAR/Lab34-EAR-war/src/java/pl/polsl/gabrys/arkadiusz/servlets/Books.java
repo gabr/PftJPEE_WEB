@@ -11,11 +11,13 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.EJB;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
 import pl.polsl.gabrys.arkadiusz.DatabaseManagerLocal;
 import pl.polsl.gabrys.arkadiusz.model.Book;
 
@@ -54,8 +56,6 @@ public class Books extends HttpServlet {
         String action = parameters.nextElement();
         
         // perform action
-        try
-        {
         switch (action) {
             case "add":
                 addBook(request, response);
@@ -73,11 +73,8 @@ public class Books extends HttpServlet {
                 deleteBook(request, response);
                 return;
             default:
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Wrong action name for Books");
+                sendError(request, response, "Wrong action name for Books");
                 return;
-        }
-        } catch (ParseException ex) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error while parsing data");
         }
     }
 
@@ -164,10 +161,9 @@ public class Books extends HttpServlet {
      * @param response thre response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs 
-     * @throws ParseException if date format is wrong
      */
     private void addBook(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException {
+            throws ServletException, IOException {
         
         ArrayList<String> requiredParameters = new ArrayList<String>();
         requiredParameters.add("title");
@@ -179,10 +175,53 @@ public class Books extends HttpServlet {
         
         if (params.keySet().containsAll(requiredParameters)) {
             String title = params.get("title")[0];
-            Long pages = Long.parseLong(params.get("pages")[0]);
+            if (title.trim().isEmpty()) {
+                sendError(request, response, "Book title cannot be empty");
+                return;
+            }
+            
+            String pagesString = params.get("pages")[0];
+            if (pagesString.trim().isEmpty()) {
+                sendError(request, response, "Book pages cannot be empty");
+                return;
+            }
+            
+            Long pages = 0L;
+            try {
+                pages = Long.parseLong(pagesString);
+            } catch (NumberFormatException nfe) {
+                sendError(request, response, "Given pages value is not a number");
+                return;
+            }
+            
+            String dateString = params.get("releaseDate")[0];
+            if (dateString.trim().isEmpty()) {
+                sendError(request, response, "Book release date cannot be empty");
+                return;
+            }
+            
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-            Date releaseDate = df.parse(params.get("releaseDate")[0]);
-            Long authorId = Long.parseLong(params.get("authorId")[0]);
+            Date releaseDate;
+            try {
+                releaseDate = df.parse(dateString);
+            } catch (ParseException ex) {
+                sendError(request, response, "Book release date format is wrong");
+                return;
+            }
+            
+            String authorIdString = params.get("authorId")[0];
+            if (authorIdString.trim().isEmpty()) {
+                sendError(request, response, "Author Id cannot be empty");
+                return;
+            }
+            
+            Long authorId = 0L;
+            try {
+                authorId = Long.parseLong(authorIdString);
+            } catch (NumberFormatException nfe) {
+                sendError(request, response, "Given Author Is not a number");
+                return;
+            }
             
             db.persistBook(title, pages, releaseDate, authorId);
             
@@ -205,7 +244,7 @@ public class Books extends HttpServlet {
         String[] values = request.getParameterValues("details");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Details id not specified");
+                sendError(request, response, "Details id not specified");
                 return;
         }
         
@@ -213,7 +252,7 @@ public class Books extends HttpServlet {
         Book book = db.findBookById(id);
         
         if (book == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Book with given id found");
+            sendError(request, response, "No Book with given id found");
             return;
         }        
         request.setAttribute("book", book);
@@ -233,7 +272,7 @@ public class Books extends HttpServlet {
         String[] values = request.getParameterValues("delete");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Delete id not specified");
+                sendError(request, response, "Delete id not specified");
                 return;
         }
         
@@ -249,10 +288,9 @@ public class Books extends HttpServlet {
      * @param response thre response object
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-     * @throws ParseException if date format is wrong
      */
     private void updateBook(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ParseException {
+            throws ServletException, IOException {
         
         ArrayList<String> requiredParameters = new ArrayList<String>();
         requiredParameters.add("title");
@@ -265,7 +303,7 @@ public class Books extends HttpServlet {
         String[] values = params.get("update");
         
         if (values.length < 1 || values[0].trim().equals("")) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Update id not specified");
+                sendError(request, response, "Update id not specified");
                 return;
         }
         
@@ -273,16 +311,59 @@ public class Books extends HttpServlet {
         Book book = db.findBookById(id);
         
         if (book == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "No Book with given id found");
+            sendError(request, response, "No Book with given id found");
             return;
         }        
         
         if (params.keySet().containsAll(requiredParameters)) {
             String title = params.get("title")[0];
-            Long pages = Long.parseLong(params.get("pages")[0]);
+            if (title.trim().isEmpty()) {
+                sendError(request, response, "Book title cannot be empty");
+                return;
+            }
+            
+            String pagesString = params.get("pages")[0];
+            if (pagesString.trim().isEmpty()) {
+                sendError(request, response, "Book pages cannot be empty");
+                return;
+            }
+            
+            Long pages = 0L;
+            try {
+                pages = Long.parseLong(pagesString);
+            } catch (NumberFormatException nfe) {
+                sendError(request, response, "Given pages value is not a number");
+                return;
+            }
+            
+            String dateString = params.get("releaseDate")[0];
+            if (dateString.trim().isEmpty()) {
+                sendError(request, response, "Book release date cannot be empty");
+                return;
+            }
+            
             DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
-            Date releaseDate = df.parse(params.get("releaseDate")[0]);
-            Long authorId = Long.parseLong(params.get("authorId")[0]);
+            Date releaseDate;
+            try {
+                releaseDate = df.parse(dateString);
+            } catch (ParseException ex) {
+                sendError(request, response, "Book release date format is wrong");
+                return;
+            }
+            
+            String authorIdString = params.get("authorId")[0];
+            if (authorIdString.trim().isEmpty()) {
+                sendError(request, response, "Author Id cannot be empty");
+                return;
+            }
+            
+            Long authorId = 0L;
+            try {
+                authorId = Long.parseLong(authorIdString);
+            } catch (NumberFormatException nfe) {
+                sendError(request, response, "Given Author Is not a number");
+                return;
+            }
             
             db.mergeBook(id, title, pages, releaseDate, authorId);
             
@@ -292,5 +373,22 @@ public class Books extends HttpServlet {
             request.setAttribute("author", book.getAuthor());
             request.getRequestDispatcher("/bookUpdate.jsp").include(request, response);
         }
+    }
+    
+    /**
+     * Shows error page
+     * @param request the request object
+     * @param response I/nse the response object
+     * @param message the error message
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if aO error occurs
+     */
+    private void sendError(HttpServletRequest request, HttpServletResponse response, String message)
+            throws ServletException, IOException {
+        
+        JspException e = new JspException(message);
+        request.setAttribute("error", e);
+        RequestDispatcher rd = request.getRequestDispatcher("/error.jsp");
+        rd.forward(request, response);
     }
 }
